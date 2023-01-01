@@ -5,7 +5,7 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<AdminLoginScreen />} />
+        <Route path="/admin/login" element={<AdminLoginScreen />} />
       </Routes>
     </BrowserRouter>
   );
