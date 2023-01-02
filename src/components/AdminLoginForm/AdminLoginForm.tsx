@@ -2,6 +2,7 @@ import { TextField, Stack, Button } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { adminRepository } from '../../repositories/admin-repository';
 
 const loginSchema = yup.object({
   aud: yup.string().required(),
@@ -26,16 +27,23 @@ function AdminLoginForm() {
     },
     resolver: yupResolver(loginSchema),
   });
+
   // 6. calculate values
   // 7. effect hooks
   // 8. handlers
+
   return (
     <Stack>
       <TextField {...register('aud')} label="id" />
       <TextField {...register('password')} label="password" />
       <Button
-        onClick={handleSubmit(({ aud, password }) => {
-          console.log(aud, password);
+        onClick={handleSubmit(async ({ aud, password }) => {
+          const { token, role } = await adminRepository.login({
+            aud,
+            password,
+          });
+          window.localStorage.setItem('token', token);
+          window.localStorage.setItem('role', role);
         })}
       >
         submit
