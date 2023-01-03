@@ -16,7 +16,7 @@ function AdminLoginForm() {
   // 4. query hooks
   // 5. form hooks
   const {
-    formState: { isDirty, isSubmitting, isValid },
+    formState: { isDirty, isValid },
     register,
     handleSubmit,
   } = useForm({
@@ -37,6 +37,7 @@ function AdminLoginForm() {
       <TextField {...register('aud')} label="id" />
       <TextField {...register('password')} label="password" />
       <Button
+        disabled={!isDirty || !isValid}
         onClick={handleSubmit(async ({ aud, password }) => {
           const { token, role } = await adminRepository.login({
             aud,
@@ -44,6 +45,7 @@ function AdminLoginForm() {
           });
           window.localStorage.setItem('token', token);
           window.localStorage.setItem('role', role);
+          window.location.href = '/';
         })}
       >
         submit
