@@ -1,12 +1,5 @@
-import { AppRouter } from './routes';
-import { theme, ThemeProvider } from './libs';
-
 function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <AppRouter />
-    </ThemeProvider>
-  );
+  return <div>hi</div>;
 }
 
 export default App;
