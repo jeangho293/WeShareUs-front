@@ -1,3 +1,5 @@
+import { TodoList } from '../../components';
+
 function TodoScreen() {
   // 1. destructure props
   // 2. lib hooks
@@ -7,7 +9,11 @@ function TodoScreen() {
   // 6. calculate values
   // 7. effect hooks
   // 8. handlers
-  return <div>hi</div>;
+  return (
+    <div>
+      <TodoList />
+    </div>
+  );
 }
 
 export { TodoScreen };
