@@ -1,6 +1,6 @@
 import { AppRouter } from './routes';
 import { ReactQueryClient, ReactQueryClientProvider } from './libs/react-query';
-import { Navigation } from './components';
+import { Layout, Navigation } from './components';
 import { theme, ThemeProvider } from './libs/theme';
 
 const client = new ReactQueryClient();
@@ -10,7 +10,9 @@ function App() {
     <ReactQueryClientProvider client={client}>
       <ThemeProvider theme={theme}>
         <Navigation />
-        <AppRouter />
+        <Layout>
+          <AppRouter />
+        </Layout>
       </ThemeProvider>
     </ReactQueryClientProvider>
   );
