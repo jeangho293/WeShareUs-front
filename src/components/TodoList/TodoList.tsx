@@ -20,14 +20,14 @@ function TodoList() {
   // 7. effect hooks
   // 8. handlers
   return (
-    <Box boxShadow={3} sx={{ borderRadius: '0px 0px 16px 16px' }}>
+    <Box boxShadow={3} sx={{ borderRadius: '16px' }}>
       <List>
         {todoItems.map((todoItem, index) => {
           return (
-            <>
-              <TodoListItem key={todoItem.id}>{todoItem.item}</TodoListItem>
+            <div key={todoItem.id}>
+              <TodoListItem todo={todoItem} />
               {index !== todoItems.length - 1 && <Divider />}
-            </>
+            </div>
           );
         })}
       </List>

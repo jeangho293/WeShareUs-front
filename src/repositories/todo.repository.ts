@@ -1,6 +1,6 @@
 import { httpClient } from '../libs/http-client';
 
-type Todo = {
+export type Todo = {
   id: string;
   item: string;
   order: number;
