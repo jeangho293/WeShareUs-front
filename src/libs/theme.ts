@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, Shadows, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
   components: {
@@ -7,7 +7,11 @@ const theme = createTheme({
         disableRipple: true,
         disableElevation: true,
       },
-      styleOverrides: {},
+    },
+    MuiListItemButton: {
+      defaultProps: {
+        disableRipple: true,
+      },
     },
   },
 });
