@@ -1,4 +1,4 @@
-import { TodoList } from '../../components';
+import { TodoSection } from '../../components';
 
 function TodoScreen() {
   // 1. destructure props
@@ -9,11 +9,7 @@ function TodoScreen() {
   // 6. calculate values
   // 7. effect hooks
   // 8. handlers
-  return (
-    <div>
-      <TodoList />
-    </div>
-  );
+  return <TodoSection />;
 }
 
 export { TodoScreen };

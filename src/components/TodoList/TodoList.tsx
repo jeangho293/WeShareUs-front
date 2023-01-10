@@ -1,37 +1,62 @@
-import { Box, List, Divider } from '@mui/material';
-import { useQuery } from '../../libs/react-query';
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { CheckBox } from '../CheckBox';
+import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { today } from '../../libs/dayjs';
-import { todoRepository } from '../../repositories/todo.repository';
-import { TodoListItem } from '../TodoListItem';
 
-function TodoList() {
+function TodoList(props: { todos: Todo[] }) {
   // 1. destructure props
+  const { todos } = props;
+
   // 2. lib hooks
   // 3. state hooks
   // 4. query hooks
-  const { data: todos } = useQuery([''], todoRepository.list, {
-    variables: { publishedDate: today() },
+  // 5. form hooks
+  const { control, setValue, handleSubmit } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      todos,
+    },
+  });
+  const { fields: todoItems } = useFieldArray({
+    control,
+    name: 'todos',
   });
 
-  // 5. form hooks
   // 6. calculate values
-  const todoItems = todos || [];
-
   // 7. effect hooks
   // 8. handlers
   return (
-    <Box boxShadow={3} sx={{ borderRadius: '16px' }}>
-      <List>
-        {todoItems.map((todoItem, index) => {
-          return (
-            <div key={todoItem.id}>
-              <TodoListItem todo={todoItem} />
-              {index !== todoItems.length - 1 && <Divider />}
-            </div>
-          );
+    <List>
+      {todoItems.map((item, index) => {
+        return (
+          <ListItem key={item.id}>
+            <ListItemIcon>
+              <CheckBox
+                checked={item.done}
+                onChange={(state) => {
+                  setValue(`todos.${index}.done`, state);
+                }}
+              />
+            </ListItemIcon>
+            <ListItemText>{item.item}</ListItemText>
+          </ListItem>
+        );
+      })}
+      <Button
+        onClick={handleSubmit(async ({ todos }) => {
+          await todoRepository.updateDone({ todos, publishedDate: today() });
         })}
-      </List>
-    </Box>
+      >
+        업데이트
+      </Button>
+    </List>
   );
 }
 
