@@ -7,7 +7,7 @@ import {
   ListItemText,
   TextField,
 } from '@mui/material';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useMutation } from '../../libs/react-query';
 import { CheckBox } from '../CheckBox';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
@@ -67,10 +67,19 @@ function TodoList(props: { todos: Todo[] }) {
                   />
                 </ListItemIcon>
                 <ListItemText>
-                  <TextField
-                    fullWidth
-                    defaultValue={item.item}
-                    {...register(`todos.${index}.item`)}
+                  <Controller
+                    control={control}
+                    name={`todos.${index}.done`}
+                    render={({ field }) => {
+                      return (
+                        <TextField
+                          fullWidth
+                          disabled={field.value}
+                          defaultValue={item.item}
+                          {...register(`todos.${index}.item`)}
+                        />
+                      );
+                    }}
                   />
                 </ListItemText>
               </ListItem>
