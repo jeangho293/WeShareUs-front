@@ -6,7 +6,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { useMutation } from '../../libs/react-query';
 import { CheckBox } from '../CheckBox';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { today } from '../../libs/dayjs';
@@ -18,10 +18,23 @@ function TodoList(props: { todos: Todo[] }) {
   // 2. lib hooks
   // 3. state hooks
   // 4. query hooks
-  const { mutateAsync } = useMutation(['todo'], todoRepository.updateDone);
+  const [updateTodo, { loading: isUpdateTodoLoading }] = useMutation(
+    ['todo'],
+    todoRepository.updateDone,
+    {
+      onCompleted: () => {
+        console.log('success');
+      },
+    },
+  );
 
   // 5. form hooks
-  const { control, setValue, handleSubmit } = useForm({
+  const {
+    formState: { isDirty, isSubmitting },
+    control,
+    setValue,
+    handleSubmit,
+  } = useForm({
     mode: 'onChange',
     defaultValues: {
       todos,
@@ -53,15 +66,9 @@ function TodoList(props: { todos: Todo[] }) {
         );
       })}
       <Button
+        disabled={isUpdateTodoLoading || isSubmitting}
         onClick={handleSubmit(async ({ todos }) => {
-          await mutateAsync(
-            { todos, publishedDate: today() },
-            {
-              onSuccess: () => {
-                console.log('success');
-              },
-            },
-          );
+          await updateTodo({ variables: { todos, publishedDate: today() } });
         })}
       >
         업데이트
