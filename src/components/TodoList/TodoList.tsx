@@ -1,9 +1,11 @@
 import {
   Button,
+  Divider,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  TextField,
 } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useMutation } from '../../libs/react-query';
@@ -30,10 +32,11 @@ function TodoList(props: { todos: Todo[] }) {
 
   // 5. form hooks
   const {
-    formState: { isDirty, isSubmitting },
+    formState: { isSubmitting },
     control,
     setValue,
     handleSubmit,
+    register,
   } = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -49,31 +52,43 @@ function TodoList(props: { todos: Todo[] }) {
   // 7. effect hooks
   // 8. handlers
   return (
-    <List>
-      {todoItems.map((item, index) => {
-        return (
-          <ListItem key={item.id}>
-            <ListItemIcon>
-              <CheckBox
-                checked={item.done}
-                onChange={(state) => {
-                  setValue(`todos.${index}.done`, state);
-                }}
-              />
-            </ListItemIcon>
-            <ListItemText>{item.item}</ListItemText>
-          </ListItem>
-        );
-      })}
+    <>
+      <List>
+        {todoItems.map((item, index) => {
+          return (
+            <div key={item.id}>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBox
+                    checked={item.done}
+                    onChange={(state) => {
+                      setValue(`todos.${index}.done`, state);
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText>
+                  <TextField
+                    fullWidth
+                    defaultValue={item.item}
+                    {...register(`todos.${index}.item`)}
+                  />
+                </ListItemText>
+              </ListItem>
+              <Divider />
+            </div>
+          );
+        })}
+      </List>
       <Button
         disabled={isUpdateTodoLoading || isSubmitting}
+        sx={{ margin: '12px 24px' }}
         onClick={handleSubmit(async ({ todos }) => {
           await updateTodo({ variables: { todos, publishedDate: today() } });
         })}
       >
         업데이트
       </Button>
-    </List>
+    </>
   );
 }
 

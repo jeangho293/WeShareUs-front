@@ -9,17 +9,14 @@ import {
 
 const MenuButton = styled((props: ButtonProps & LinkProps) => {
   return (
-    <Button
-      component={Link}
-      href={props.href}
-      sx={{ '&:hover': { backgroundColor: 'transparent' } }}
-      {...props}
-    >
+    <Button component={Link} href={props.href} {...props}>
       {props.children}
     </Button>
   );
 })({
   color: 'red',
+  backgroundColor: '#202124',
+  '&:hover': { backgroundColor: 'transparent' },
 });
 
 function NavigationMenu() {
