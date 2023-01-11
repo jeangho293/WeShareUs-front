@@ -3,11 +3,12 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   TextField,
+  IconButton,
 } from '@mui/material';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useMutation } from '../../libs/react-query';
 import { CheckBox } from '../CheckBox';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
@@ -43,7 +44,7 @@ function TodoList(props: { todos: Todo[] }) {
       todos,
     },
   });
-  const { fields: todoItems } = useFieldArray({
+  const { fields: todoItems, remove } = useFieldArray({
     control,
     name: 'todos',
   });
@@ -58,14 +59,12 @@ function TodoList(props: { todos: Todo[] }) {
           return (
             <div key={item.id}>
               <ListItem>
-                <ListItemIcon>
-                  <CheckBox
-                    checked={item.done}
-                    onChange={(state) => {
-                      setValue(`todos.${index}.done`, state);
-                    }}
-                  />
-                </ListItemIcon>
+                <CheckBox
+                  checked={item.done}
+                  onChange={(state) => {
+                    setValue(`todos.${index}.done`, state);
+                  }}
+                />
                 <ListItemText>
                   <Controller
                     control={control}
@@ -73,7 +72,7 @@ function TodoList(props: { todos: Todo[] }) {
                     render={({ field }) => {
                       return (
                         <TextField
-                          fullWidth
+                          sx={{ width: '80%' }}
                           disabled={field.value}
                           defaultValue={item.item}
                           {...register(`todos.${index}.item`)}
@@ -82,6 +81,9 @@ function TodoList(props: { todos: Todo[] }) {
                     }}
                   />
                 </ListItemText>
+                <IconButton onClick={() => remove(index)}>
+                  <DeleteIcon sx={{ color: 'red' }} />
+                </IconButton>
               </ListItem>
               <Divider />
             </div>
@@ -92,6 +94,7 @@ function TodoList(props: { todos: Todo[] }) {
         disabled={isUpdateTodoLoading || isSubmitting}
         sx={{ margin: '12px 24px' }}
         onClick={handleSubmit(async ({ todos }) => {
+          console.log(todos);
           await updateTodo({ variables: { todos, publishedDate: today() } });
         })}
       >
