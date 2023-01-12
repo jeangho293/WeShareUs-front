@@ -1,25 +1,23 @@
 import { httpClient } from '../libs/http-client';
+import { queryClient, queryKeyMap } from '../libs/react-query';
 
 export type Todo = {
   id: string;
-  item: string;
-  order: number;
-  done: boolean;
   publishedDate: string;
+  todoItems: { order: number; content: string; done: boolean }[];
 };
 
 export const todoRepository = {
-  async list({ publishedDate }: { publishedDate: string }) {
-    return httpClient.get<Todo[]>(`/todos?publishedDate=${publishedDate}`);
+  async retrieve({ publishedDate }: { publishedDate: string }) {
+    return httpClient.get<Todo>(`/todos?publishedDate=${publishedDate}`);
   },
 
-  async updateDone({
-    todos,
-    publishedDate,
-  }: {
-    todos: Todo[];
-    publishedDate: string;
-  }) {
-    return httpClient.patch(`/todos?publishedDate=${publishedDate}`, todos);
+  async updateDone({ todo }: { todo: Todo }) {
+    return httpClient.patch(`/todos`, todo).then(() => {
+      queryClient.refetchQueries(['todo', todo.publishedDate]);
+    });
   },
 };
+
+queryKeyMap.set(todoRepository.retrieve, ['todo']);
+queryKeyMap.set(todoRepository.updateDone, ['todo']);

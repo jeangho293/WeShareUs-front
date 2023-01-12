@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useQuery } from '../../libs/react-query';
 import { todoRepository } from '../../repositories/todo.repository';
@@ -14,16 +14,18 @@ function TodoSection() {
   const [publishedDate, setPublishedDate] = useState<PublishedDate>(today());
 
   // 4. query hooks
-  const { data: todos, isLoading: isLoadingTodos } = useQuery(
-    ['todo'],
-    todoRepository.list,
+  const { data: todo, isLoading: isLoadingTodos } = useQuery(
+    todoRepository.retrieve,
     {
       variables: { publishedDate },
     },
   );
-
   // 5. form hooks
   // 6. calculate values
+  if (!todo) {
+    return <div>loading...</div>;
+  }
+
   // 7. effect hooks
   // 8. handlers
   return (
@@ -36,7 +38,7 @@ function TodoSection() {
         <Typography variant="h4" textAlign="center" sx={{ padding: '16px 0' }}>
           TODO LIST
         </Typography>
-        {!isLoadingTodos && <TodoList todos={todos || []} />}
+        {!isLoadingTodos && <TodoList todo={todo} />}
       </Box>
     </div>
   );

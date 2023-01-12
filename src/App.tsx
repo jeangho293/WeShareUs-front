@@ -1,18 +1,23 @@
+import { SnackbarProvider } from 'notistack';
 import { AppRouter } from './routes';
-import { ReactQueryClient, ReactQueryClientProvider } from './libs/react-query';
+import { queryClient, ReactQueryClientProvider } from './libs/react-query';
 import { Layout, Navigation } from './components';
 import { theme, ThemeProvider } from './libs/theme';
 
-const client = new ReactQueryClient();
-
 function App() {
   return (
-    <ReactQueryClientProvider client={client}>
+    <ReactQueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <Navigation />
-        <Layout>
-          <AppRouter />
-        </Layout>
+        <SnackbarProvider
+          autoHideDuration={2000}
+          maxSnack={1}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Navigation />
+          <Layout>
+            <AppRouter />
+          </Layout>
+        </SnackbarProvider>
       </ThemeProvider>
     </ReactQueryClientProvider>
   );

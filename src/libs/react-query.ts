@@ -5,21 +5,30 @@ import {
   useMutation as ReactQueryMutation,
 } from 'react-query';
 
+const queryClient = new ReactQueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 1000,
+    },
+  },
+});
+
+const queryKeyMap = new Map();
+
 const useQuery = <T extends Record<string, any>, R>(
-  queryKey: string[],
   queryFn: (...args: T[]) => Promise<R>,
   options?: {
     variables?: T;
   },
 ) => {
-  return ReactQuery(queryKey, () =>
-    options?.variables ? queryFn(options?.variables) : queryFn(),
+  return ReactQuery(
+    [...queryKeyMap.get(queryFn), Object.values(options?.variables ?? {})],
+    () => (options?.variables ? queryFn(options?.variables) : queryFn()),
   );
 };
 
 const useMutation = <T, R>(
-  queryKey: string[],
-  queryFn: (args: T) => Promise<R>,
+  MutationFn: (args: T) => Promise<R>,
   options?: {
     onCompleted?: () => void;
     onError?: (error: Error) => void;
@@ -36,8 +45,13 @@ const useMutation = <T, R>(
     R,
     Error,
     { variables: T }
-  >(queryKey, ({ variables }) => queryFn(variables), {
+  >(({ variables }) => MutationFn(variables), {
     onSuccess: () => {
+      if (queryKeyMap.get(MutationFn)) {
+        queryClient.refetchQueries(queryKeyMap.get(MutationFn), {
+          exact: false,
+        });
+      }
       options?.onCompleted?.();
     },
     onError: options?.onError,
@@ -59,4 +73,10 @@ const useMutation = <T, R>(
   ];
 };
 
-export { useQuery, useMutation, ReactQueryClient, ReactQueryClientProvider };
+export {
+  useQuery,
+  useMutation,
+  queryClient,
+  ReactQueryClientProvider,
+  queryKeyMap,
+};

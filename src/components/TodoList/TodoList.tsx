@@ -7,27 +7,26 @@ import {
   TextField,
   IconButton,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useMutation } from '../../libs/react-query';
 import { CheckBox } from '../CheckBox';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
-import { today } from '../../libs/dayjs';
 
-function TodoList(props: { todos: Todo[] }) {
+function TodoList(props: { todo: Todo }) {
   // 1. destructure props
-  const { todos } = props;
+  const { todo } = props;
 
   // 2. lib hooks
+  const { enqueueSnackbar } = useSnackbar();
+
   // 3. state hooks
   // 4. query hooks
   const [updateTodo, { loading: isUpdateTodoLoading }] = useMutation(
-    ['todo'],
     todoRepository.updateDone,
     {
-      onCompleted: () => {
-        console.log('success');
-      },
+      onCompleted: () => enqueueSnackbar('updated.', { variant: 'success' }),
     },
   );
 
@@ -41,12 +40,12 @@ function TodoList(props: { todos: Todo[] }) {
   } = useForm({
     mode: 'onChange',
     defaultValues: {
-      todos,
+      todo,
     },
   });
   const { fields: todoItems, remove } = useFieldArray({
     control,
-    name: 'todos',
+    name: 'todo.todoItems',
   });
 
   // 6. calculate values
@@ -62,20 +61,20 @@ function TodoList(props: { todos: Todo[] }) {
                 <CheckBox
                   checked={item.done}
                   onChange={(state) => {
-                    setValue(`todos.${index}.done`, state);
+                    setValue(`todo.todoItems.${index}.done`, state);
                   }}
                 />
                 <ListItemText>
                   <Controller
                     control={control}
-                    name={`todos.${index}.done`}
+                    name={`todo.todoItems.${index}.done`}
                     render={({ field }) => {
                       return (
                         <TextField
                           sx={{ width: '80%' }}
                           disabled={field.value}
-                          defaultValue={item.item}
-                          {...register(`todos.${index}.item`)}
+                          defaultValue={item.content}
+                          {...register(`todo.todoItems.${index}.content`)}
                         />
                       );
                     }}
@@ -93,9 +92,8 @@ function TodoList(props: { todos: Todo[] }) {
       <Button
         disabled={isUpdateTodoLoading || isSubmitting}
         sx={{ margin: '12px 24px' }}
-        onClick={handleSubmit(async ({ todos }) => {
-          console.log(todos);
-          await updateTodo({ variables: { todos, publishedDate: today() } });
+        onClick={handleSubmit(async ({ todo }) => {
+          await updateTodo({ variables: { todo } });
         })}
       >
         업데이트
