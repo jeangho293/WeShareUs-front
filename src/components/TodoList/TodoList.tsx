@@ -1,7 +1,6 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import {
   Button,
-  Divider,
   IconButton,
   List,
   ListItem,
@@ -10,7 +9,9 @@ import {
   Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
 import { useMutation } from '../../libs/react-query';
@@ -23,6 +24,8 @@ function TodoList(props: { todo: Todo }) {
   const { enqueueSnackbar } = useSnackbar();
 
   // 3. state hooks
+  const [content, setContent] = useState('');
+
   // 4. query hooks
   const [updateTodo] = useMutation(todoRepository.updateDone, {
     onCompleted: () =>
@@ -54,6 +57,24 @@ function TodoList(props: { todo: Todo }) {
   return (
     <>
       <List>
+        <ListItem>
+          <TextField
+            value={content}
+            placeholder="새로운 할일을 추가하세요."
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+          <IconButton
+            onClick={() => {
+              append({ content, done: false });
+              setContent('');
+              console.log(content);
+            }}
+          >
+            <AddIcon sx={{ backgroundColor: 'green', borderRadius: '50%' }} />
+          </IconButton>
+        </ListItem>
         {todoItems.map((todoItem, index) => {
           return (
             <ListItem key={todoItem.id}>
@@ -81,12 +102,6 @@ function TodoList(props: { todo: Todo }) {
                           {...register(`todoItems.${index}.content`)}
                         />
                       )}
-                      {/* <TextField */}
-                      {/*  defaultValue={todoItem.content} */}
-                      {/*  disabled={field.value} */}
-                      {/*  sx={{ width: '85%' }} */}
-                      {/*  {...register(`todoItems.${index}.content`)} */}
-                      {/* /> */}
                     </div>
                   );
                 }}
@@ -110,9 +125,6 @@ function TodoList(props: { todo: Todo }) {
           })}
         >
           수정하기
-        </Button>
-        <Button onClick={() => append({ content: '', done: false })}>
-          추가하기
         </Button>
       </Stack>
     </>
