@@ -8,9 +8,10 @@ import { dateToPublishedDate } from '../../libs/dayjs';
 function CalendarDatePicker(props: {
   publishedDate: string;
   onChange: (publishedDate: PublishedDate) => void;
+  width?: string;
 }) {
   // 1. destructure props
-  const { publishedDate, onChange } = props;
+  const { publishedDate, onChange, width } = props;
 
   // 2. lib hooks
   // 3. state hooks
@@ -31,7 +32,7 @@ function CalendarDatePicker(props: {
           }
         }}
         value={date}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => <TextField {...params} sx={{ width }} />}
         inputFormat="YYYY-MM-DD"
       />
     </LocalizationProvider>

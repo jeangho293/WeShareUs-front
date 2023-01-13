@@ -8,11 +8,10 @@ import {
 const queryClient = new ReactQueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 10 * 1000,
+      refetchOnWindowFocus: false,
     },
   },
 });
-
 const queryKeyMap = new Map();
 
 const useQuery = <T extends Record<string, any>, R>(
@@ -21,10 +20,16 @@ const useQuery = <T extends Record<string, any>, R>(
     variables?: T;
   },
 ) => {
-  return ReactQuery(
+  const { isLoading: loading, ...result } = ReactQuery(
     [...queryKeyMap.get(queryFn), ...Object.values(options?.variables ?? {})],
     () => (options?.variables ? queryFn(options?.variables) : queryFn()),
+    {
+      // NOTE: 우선 useQuery에 대해서 캐싱을 하지는 않겠다.
+      cacheTime: 0,
+    },
   );
+
+  return { ...result, loading };
 };
 
 const useMutation = <T, R>(
