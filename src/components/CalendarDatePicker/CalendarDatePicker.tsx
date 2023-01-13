@@ -3,6 +3,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
 import { TextField } from '@mui/material';
 import type { PublishedDate } from '../../type';
+import { dateToPublishedDate } from '../../libs/dayjs';
 
 function CalendarDatePicker(props: {
   publishedDate: string;
@@ -24,7 +25,10 @@ function CalendarDatePicker(props: {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         onChange={(newDate) => {
-          setDate(newDate);
+          if (newDate) {
+            setDate(newDate);
+            onChange(dateToPublishedDate(newDate));
+          }
         }}
         value={date}
         renderInput={(params) => <TextField {...params} />}

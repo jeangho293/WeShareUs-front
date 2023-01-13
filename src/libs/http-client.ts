@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { today } from './dayjs';
 
 export const httpClient = (() => {
   const instance = axios.create({
@@ -17,7 +16,7 @@ export const httpClient = (() => {
       if (data !== 'No todo') {
         return Promise.reject(err);
       }
-      await instance.post('/todos', { publishedDate: today() });
+      await instance.post(config.url);
       return instance(config);
     },
   );
