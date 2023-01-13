@@ -43,7 +43,11 @@ function TodoList(props: { todo: Todo }) {
       todo,
     },
   });
-  const { fields: todoItems, remove } = useFieldArray({
+  const {
+    fields: todoItems,
+    remove,
+    append,
+  } = useFieldArray({
     control,
     name: 'todo.todoItems',
   });
@@ -98,6 +102,7 @@ function TodoList(props: { todo: Todo }) {
       >
         업데이트
       </Button>
+      <Button onClick={() => append({ content: '', done: false })}>추가</Button>
     </>
   );
 }

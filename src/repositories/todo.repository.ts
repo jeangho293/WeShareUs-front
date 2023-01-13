@@ -4,7 +4,7 @@ import { queryClient, queryKeyMap } from '../libs/react-query';
 export type Todo = {
   id: string;
   publishedDate: string;
-  todoItems: { order: number; content: string; done: boolean }[];
+  todoItems: { content: string; done: boolean }[];
 };
 
 export const todoRepository = {
