@@ -22,7 +22,7 @@ const useQuery = <T extends Record<string, any>, R>(
   },
 ) => {
   return ReactQuery(
-    [...queryKeyMap.get(queryFn), Object.values(options?.variables ?? {})],
+    [...queryKeyMap.get(queryFn), ...Object.values(options?.variables ?? {})],
     () => (options?.variables ? queryFn(options?.variables) : queryFn()),
   );
 };
