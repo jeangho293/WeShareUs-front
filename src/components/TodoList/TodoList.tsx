@@ -1,6 +1,7 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import {
-  Button,
+  Chip,
+  Divider,
   IconButton,
   List,
   ListItem,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -54,80 +56,102 @@ function TodoList(props: { todo: Todo }) {
   // 6. calculate values
   // 7. effect hooks
   // 8. handlers
+  const handleUpdate = () => {
+    handleSubmit(async ({ id, todoItems, publishedDate }) => {
+      await updateTodo({
+        variables: { todo: { id, todoItems, publishedDate } },
+      });
+    })();
+  };
+
   return (
-    <>
-      <List>
-        <ListItem>
-          <TextField
-            value={content}
-            placeholder="새로운 할일을 추가하세요."
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
-          />
-          <IconButton
-            onClick={() => {
+    <List>
+      <ListItem>
+        <TextField
+          value={content}
+          placeholder="새로운 할일을 추가하세요."
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+          error={!content}
+        />
+        <IconButton
+          onClick={() => {
+            if (!content) {
+              alert('hi');
+            } else {
               append({ content, done: false });
               setContent('');
-              console.log(content);
+              handleUpdate();
+            }
+          }}
+        >
+          <AddIcon sx={{ backgroundColor: 'green', borderRadius: '50%' }} />
+        </IconButton>
+      </ListItem>
+      <Divider sx={{ padding: '0 16px' }}>
+        <Chip label={`오늘의 할일 (${todoItems.length})`} />
+      </Divider>
+      {todoItems.map((todoItem, index) => {
+        return (
+          <ListItem
+            key={todoItem.id}
+            sx={{
+              backgroundColor: '#ede7f6',
+              transition: 'all 0.5s',
+              padding: '0 16px 0 0',
+              margin: '16px 12px',
+              borderRadius: '16px',
+              width: '95%',
+              '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
             }}
           >
-            <AddIcon sx={{ backgroundColor: 'green', borderRadius: '50%' }} />
-          </IconButton>
-        </ListItem>
-        {todoItems.map((todoItem, index) => {
-          return (
-            <ListItem key={todoItem.id}>
-              <CheckBox
-                checked={todoItem.done}
-                onChange={(state) => {
-                  setValue(`todoItems.${index}.done`, state);
-                }}
-              />
+            <CheckBox
+              checked={todoItem.done}
+              onChange={(state) => {
+                setValue(`todoItems.${index}.done`, state);
+              }}
+            />
+            <Stack sx={{ width: '85%' }}>
               <Controller
                 control={control}
                 name={`todoItems.${index}.done`}
                 render={({ field }) => {
                   return (
-                    <div style={{ width: '85%' }}>
-                      {field.value ? (
-                        <Typography>
-                          {getValues(`todoItems.${index}.content`)}
-                        </Typography>
-                      ) : (
-                        <TextField
-                          defaultValue={todoItem.content}
-                          disabled={field.value}
-                          fullWidth
-                          {...register(`todoItems.${index}.content`)}
-                        />
-                      )}
-                    </div>
+                    <Typography
+                      sx={
+                        field.value
+                          ? {
+                              textDecorationLine: 'line-through',
+                              color: 'grey',
+                            }
+                          : {}
+                      }
+                    >
+                      {getValues(`todoItems.${index}.content`)}
+                    </Typography>
                   );
                 }}
               />
-              <IconButton onClick={() => remove(index)} sx={{ color: 'red' }}>
+            </Stack>
+            <Stack direction="row" spacing="8px">
+              <IconButton>
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  remove(index);
+                  handleUpdate();
+                }}
+                sx={{ color: 'red' }}
+              >
                 <DeleteIcon />
               </IconButton>
-            </ListItem>
-          );
-        })}
-      </List>
-      <Stack
-        spacing="16px"
-        sx={{ justifyContent: 'center', alignItems: 'center' }}
-      >
-        <Button
-          onClick={handleSubmit(async ({ id, publishedDate, todoItems }) => {
-            await updateTodo({
-              variables: { todo: { id, publishedDate, todoItems } },
-            });
-          })}
-        >
-          수정하기
-        </Button>
-      </Stack>
-    </>
+            </Stack>
+          </ListItem>
+        );
+      })}
+    </List>
   );
 }
 

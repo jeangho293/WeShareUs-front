@@ -1,4 +1,6 @@
 import { Checkbox as MuiCheckBox } from '@mui/material';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { useState } from 'react';
 
 function CheckBox(props: {
@@ -24,6 +26,8 @@ function CheckBox(props: {
         setDone(event.target.checked);
         onChange(event.target.checked);
       }}
+      icon={<RadioButtonUncheckedIcon />}
+      checkedIcon={<RadioButtonCheckedIcon sx={{ fill: '#7c4dff' }} />}
     />
   );
 }

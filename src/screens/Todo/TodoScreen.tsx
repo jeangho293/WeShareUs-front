@@ -26,27 +26,25 @@ function TodoScreen() {
   // 7. effect hooks
   // 8. handlers
   return (
-    <div>
-      <Box boxShadow={3} borderRadius="12px">
-        <Stack
-          spacing="16px"
-          sx={{ justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Typography variant="h4">TODO LIST</Typography>
-          <CalendarDatePicker
-            publishedDate={publishedDate}
-            onChange={setPublishedDate}
-            width="25%"
-          />
-          {!isValid && (
-            <div>
-              <CircularProgress color="primary" />
-            </div>
-          )}
-        </Stack>
-        {todo && <TodoList todo={todo} />}
-      </Box>
-    </div>
+    <Box sx={{ borderRadius: '12px', boxShadow: 3 }}>
+      <Stack
+        spacing="16px"
+        sx={{ justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Typography variant="h4">TODO LIST</Typography>
+        <CalendarDatePicker
+          publishedDate={publishedDate}
+          onChange={setPublishedDate}
+          width="25%"
+        />
+        {!isValid && (
+          <div>
+            <CircularProgress color="primary" />
+          </div>
+        )}
+      </Stack>
+      {todo && <TodoList todo={todo} />}
+    </Box>
   );
 }
 
