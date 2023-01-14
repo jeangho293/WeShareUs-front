@@ -6,6 +6,8 @@ const theme = createTheme({
       defaultProps: {
         color: 'primary',
         variant: 'contained',
+        disableElevation: true,
+        disableRipple: true,
       },
     },
     MuiListItemButton: {
@@ -33,6 +35,11 @@ const theme = createTheme({
           '&::before': { borderWidth: '2px' },
           '&::after': { borderWidth: '2px' },
         },
+      },
+    },
+    MuiCheckbox: {
+      defaultProps: {
+        disableRipple: true,
       },
     },
   },

@@ -99,20 +99,21 @@ function TodoList(props: { todo: Todo }) {
             sx={{
               backgroundColor: '#ede7f6',
               transition: 'all 0.5s',
-              padding: '0 16px 0 0',
-              margin: '16px 12px',
+              padding: '0 12px 0 0',
+              margin: '16px auto',
+              width: '80%',
               borderRadius: '16px',
-              width: '95%',
               '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
             }}
           >
-            <CheckBox
-              checked={todoItem.done}
-              onChange={(state) => {
-                setValue(`todoItems.${index}.done`, state);
-              }}
-            />
-            <Stack sx={{ width: '85%' }}>
+            <Stack direction="row" sx={{ width: '100%', alignItems: 'center' }}>
+              <CheckBox
+                checked={todoItem.done}
+                onChange={(state) => {
+                  setValue(`todoItems.${index}.done`, state);
+                }}
+              />
+
               <Controller
                 control={control}
                 name={`todoItems.${index}.done`}
@@ -134,20 +135,15 @@ function TodoList(props: { todo: Todo }) {
                 }}
               />
             </Stack>
-            <Stack direction="row" spacing="8px">
-              <IconButton>
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  remove(index);
-                  handleUpdate();
-                }}
-                sx={{ color: 'red' }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Stack>
+            <IconButton
+              onClick={() => {
+                remove(index);
+                handleUpdate();
+              }}
+              sx={{ color: 'red' }}
+            >
+              <DeleteIcon />
+            </IconButton>
           </ListItem>
         );
       })}
