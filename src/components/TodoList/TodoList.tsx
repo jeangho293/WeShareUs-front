@@ -127,7 +127,16 @@ function TodoList(props: { todo: Todo }) {
           </ListItem>
         );
       })}
-      <ListItem sx={{ margin: '0 auto', width: '80%' }}>
+      <ListItem
+        sx={{
+          backgroundColor: '#ede7f6',
+          transition: 'all 0.5s',
+          padding: 0,
+          margin: '16px auto',
+          width: '80%',
+          borderRadius: '16px',
+        }}
+      >
         <TextField
           value={content}
           fullWidth
@@ -135,7 +144,11 @@ function TodoList(props: { todo: Todo }) {
           onChange={(e) => {
             setContent(e.target.value);
           }}
-          error={!content}
+          variant="standard"
+          InputProps={{
+            disableUnderline: true,
+          }}
+          sx={{ paddingLeft: '12px' }}
         />
         <Button
           onClick={() => {
@@ -147,11 +160,13 @@ function TodoList(props: { todo: Todo }) {
           }}
           sx={{
             marginLeft: '16px',
-            borderRadius: '16px',
-            backgroundColor: '#8bc34a',
+            borderRadius: '0 16px 16px 0',
+            backgroundColor: '#e1bee7',
+            color: 'black',
+            '&:hover': { backgroundColor: '#ce93d8' },
           }}
         >
-          추가
+          Add
         </Button>
       </ListItem>
     </List>
