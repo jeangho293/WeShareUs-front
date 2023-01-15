@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
@@ -23,8 +22,6 @@ function TodoList(props: { todo: Todo }) {
   const { todo } = props;
 
   // 2. lib hooks
-  const { enqueueSnackbar } = useSnackbar();
-
   // 3. state hooks
   const [content, setContent] = useState('');
   const [doneCount, setDoneCount] = useState(
@@ -32,11 +29,7 @@ function TodoList(props: { todo: Todo }) {
   );
 
   // 4. query hooks
-  const [updateTodo] = useMutation(todoRepository.updateDone, {
-    onCompleted: () =>
-      enqueueSnackbar('수정되었습니다', { variant: 'success' }),
-    onError: () => enqueueSnackbar('실패했습니다.', { variant: 'error' }),
-  });
+  const [updateTodo] = useMutation(todoRepository.updateDone);
 
   // 5. form hooks
   const { control, getValues, setValue, handleSubmit } = useForm({
@@ -123,6 +116,7 @@ function TodoList(props: { todo: Todo }) {
                   } else {
                     setDoneCount(doneCount - 1);
                   }
+                  handleUpdate();
                 }}
               />
 
