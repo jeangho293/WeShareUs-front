@@ -15,7 +15,7 @@ function Layout(props: { children: ReactNode }) {
   return (
     <Stack
       sx={{
-        maxWidth: '60%',
+        maxWidth: '50%',
         margin: '128px auto',
         borderRadius: '12px',
         backgroundColor: '#fff',
