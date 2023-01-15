@@ -10,13 +10,13 @@ import {
   Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
 import { useMutation } from '../../libs/react-query';
+import { ProgressBar } from '../ProgressBar';
 
 function TodoList(props: { todo: Todo }) {
   // 1. destructure props
@@ -27,6 +27,9 @@ function TodoList(props: { todo: Todo }) {
 
   // 3. state hooks
   const [content, setContent] = useState('');
+  const [doneCount, setDoneCount] = useState(
+    todo.todoItems.filter((todoItem) => todoItem.done).length,
+  );
 
   // 4. query hooks
   const [updateTodo] = useMutation(todoRepository.updateDone, {
@@ -36,7 +39,7 @@ function TodoList(props: { todo: Todo }) {
   });
 
   // 5. form hooks
-  const { control, getValues, setValue, register, handleSubmit } = useForm({
+  const { control, getValues, setValue, handleSubmit } = useForm({
     mode: 'onChange',
     defaultValues: {
       id: todo.id,
@@ -55,6 +58,7 @@ function TodoList(props: { todo: Todo }) {
 
   // 6. calculate values
   // 7. effect hooks
+  // useEffect(() => {}, [todoItems]);
   // 8. handlers
   const handleUpdate = () => {
     handleSubmit(async ({ id, todoItems, publishedDate }) => {
@@ -66,9 +70,10 @@ function TodoList(props: { todo: Todo }) {
 
   return (
     <List>
-      <ListItem>
+      <ListItem sx={{ margin: '16px auto', width: '80%' }}>
         <TextField
           value={content}
+          fullWidth
           placeholder="새로운 할일을 추가하세요."
           onChange={(e) => {
             setContent(e.target.value);
@@ -77,21 +82,23 @@ function TodoList(props: { todo: Todo }) {
         />
         <IconButton
           onClick={() => {
-            if (!content) {
-              alert('hi');
-            } else {
+            if (content) {
               append({ content, done: false });
               setContent('');
               handleUpdate();
             }
           }}
+          sx={{ marginLeft: '16px' }}
         >
-          <AddIcon sx={{ backgroundColor: 'green', borderRadius: '50%' }} />
+          <AddBoxIcon sx={{ color: '#8bc34a', borderRadius: '50%' }} />
         </IconButton>
       </ListItem>
       <Divider sx={{ padding: '0 16px' }}>
         <Chip label={`오늘의 할일 (${todoItems.length})`} />
       </Divider>
+      <Stack sx={{ width: '100px', margin: '12px auto 0' }}>
+        <ProgressBar value={{ total: todoItems.length, doneCount }} />
+      </Stack>
       {todoItems.map((todoItem, index) => {
         return (
           <ListItem
@@ -111,6 +118,11 @@ function TodoList(props: { todo: Todo }) {
                 checked={todoItem.done}
                 onChange={(state) => {
                   setValue(`todoItems.${index}.done`, state);
+                  if (state) {
+                    setDoneCount(doneCount + 1);
+                  } else {
+                    setDoneCount(doneCount - 1);
+                  }
                 }}
               />
 
