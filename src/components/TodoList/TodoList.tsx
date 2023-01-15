@@ -1,7 +1,6 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import {
-  Chip,
-  Divider,
+  Button,
   IconButton,
   List,
   ListItem,
@@ -10,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useState } from 'react';
 import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
@@ -42,8 +40,8 @@ function TodoList(props: { todo: Todo }) {
   });
   const {
     fields: todoItems,
-    append,
     remove,
+    append,
   } = useFieldArray({
     control,
     name: 'todoItems',
@@ -51,7 +49,6 @@ function TodoList(props: { todo: Todo }) {
 
   // 6. calculate values
   // 7. effect hooks
-  // useEffect(() => {}, [todoItems]);
   // 8. handlers
   const handleUpdate = () => {
     handleSubmit(async ({ id, todoItems, publishedDate }) => {
@@ -62,36 +59,13 @@ function TodoList(props: { todo: Todo }) {
   };
 
   return (
-    <List>
-      <ListItem sx={{ margin: '16px auto', width: '80%' }}>
-        <TextField
-          value={content}
-          fullWidth
-          placeholder="새로운 할일을 추가하세요."
-          onChange={(e) => {
-            setContent(e.target.value);
-          }}
-          error={!content}
-        />
-        <IconButton
-          onClick={() => {
-            if (content) {
-              append({ content, done: false });
-              setContent('');
-              handleUpdate();
-            }
-          }}
-          sx={{ marginLeft: '16px' }}
-        >
-          <AddBoxIcon sx={{ color: '#8bc34a', borderRadius: '50%' }} />
-        </IconButton>
-      </ListItem>
-      <Divider sx={{ padding: '0 16px' }}>
-        <Chip label={`오늘의 할일 (${todoItems.length})`} />
-      </Divider>
-      <Stack sx={{ width: '100px', margin: '12px auto 0' }}>
-        <ProgressBar value={{ total: todoItems.length, doneCount }} />
-      </Stack>
+    <List sx={{ width: '100%' }}>
+      {todoItems.length > 0 && (
+        <Stack sx={{ width: '100px', margin: '0 auto' }}>
+          <ProgressBar value={{ total: todoItems.length, doneCount }} />
+        </Stack>
+      )}
+
       {todoItems.map((todoItem, index) => {
         return (
           <ListItem
@@ -153,6 +127,33 @@ function TodoList(props: { todo: Todo }) {
           </ListItem>
         );
       })}
+      <ListItem sx={{ margin: '0 auto', width: '80%' }}>
+        <TextField
+          value={content}
+          fullWidth
+          placeholder="새로운 항목을 추가해주세요."
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+          error={!content}
+        />
+        <Button
+          onClick={() => {
+            if (content) {
+              append({ content, done: false });
+              setContent('');
+              handleUpdate();
+            }
+          }}
+          sx={{
+            marginLeft: '16px',
+            borderRadius: '16px',
+            backgroundColor: '#8bc34a',
+          }}
+        >
+          추가
+        </Button>
+      </ListItem>
     </List>
   );
 }
