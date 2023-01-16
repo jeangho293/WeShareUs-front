@@ -1,14 +1,23 @@
 import { SnackbarProvider } from 'notistack';
+import { Paper } from '@mui/material';
 import { AppRouter } from './routes';
 import { queryClient, ReactQueryClientProvider } from './libs/react-query';
 import { Layout, Navigation } from './components';
 import { theme, ThemeProvider } from './libs/theme';
+import NightSky from './assets/night-sky.jpg';
 
 function App() {
   return (
-    <div style={{ backgroundColor: '#b39ddb', width: '100%', height: '100vh' }}>
-      <ReactQueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
+    <ReactQueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Paper
+          sx={{
+            width: '100%',
+            height: '100vh',
+            backgroundImage: `url(${NightSky})`,
+            backgroundSize: 'cover',
+          }}
+        >
           <SnackbarProvider
             autoHideDuration={2000}
             maxSnack={1}
@@ -19,9 +28,9 @@ function App() {
               <AppRouter />
             </Layout>
           </SnackbarProvider>
-        </ThemeProvider>
-      </ReactQueryClientProvider>
-    </div>
+        </Paper>
+      </ThemeProvider>
+    </ReactQueryClientProvider>
   );
 }
 

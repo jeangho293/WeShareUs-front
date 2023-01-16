@@ -53,7 +53,7 @@ function TodoList(props: { todo: Todo }) {
   const handleUpdate = () => {
     handleSubmit(async ({ id, todoItems, publishedDate }) => {
       await updateTodo({
-        variables: { todo: { id, todoItems, publishedDate } },
+        variables: { id, todoItems, publishedDate },
       });
     })();
   };
@@ -135,6 +135,7 @@ function TodoList(props: { todo: Todo }) {
           margin: '16px auto',
           width: '80%',
           borderRadius: '16px',
+          '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
         }}
       >
         <TextField

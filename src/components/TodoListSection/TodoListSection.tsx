@@ -31,19 +31,24 @@ function TodoListSection() {
     <>
       <Stack
         spacing="16px"
-        sx={{ justifyContent: 'center', alignItems: 'center' }}
+        sx={{ justifyContent: 'center', alignItems: 'center', color: '#FFF' }}
       >
         <Typography variant="h3" sx={{ marginTop: '24px' }}>
           TODO LIST
         </Typography>
-        <CalendarDatePicker
-          publishedDate={publishedDate}
-          onChange={(state) => {
-            setPublishedDate(state);
-          }}
-        />
-        <Divider sx={{ width: '90%' }}>
-          <Chip label={`오늘의 할일 (${todo?.todoItems?.length || 0})`} />
+        <Stack sx={{ backgroundColor: '#FFF', borderRadius: '4px' }}>
+          <CalendarDatePicker
+            publishedDate={publishedDate}
+            onChange={(state) => {
+              setPublishedDate(state);
+            }}
+          />
+        </Stack>
+        <Divider sx={{ width: '90%', borderColor: '#FFF' }}>
+          <Chip
+            label={`오늘의 할일 (${todo?.todoItems?.length || 0})`}
+            sx={{ color: '#FFF', backgroundColor: 'black' }}
+          />
         </Divider>
       </Stack>
       {isValid ? <TodoList todo={todo} /> : <TodoListSkeleton />}

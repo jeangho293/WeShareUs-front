@@ -11,7 +11,13 @@ function TodoScreen() {
   // 7. effect hooks
   // 8. handlers
   return (
-    <Box sx={{ borderRadius: '12px', boxShadow: 3 }}>
+    <Box
+      sx={{
+        borderRadius: '12px',
+        boxShadow: 3,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      }}
+    >
       <TodoListSection />
     </Box>
   );

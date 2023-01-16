@@ -18,7 +18,6 @@ function Layout(props: { children: ReactNode }) {
         maxWidth: '50%',
         margin: '128px auto',
         borderRadius: '12px',
-        backgroundColor: '#fff',
       }}
     >
       {children}

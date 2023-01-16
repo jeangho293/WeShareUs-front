@@ -1,10 +1,12 @@
 import { httpClient } from '../libs/http-client';
 import { queryClient, queryKeyMap } from '../libs/react-query';
+import { PublishedDate } from '../type';
 
+export type TodoItem = { content: string; done: boolean };
 export type Todo = {
   id: string;
   publishedDate: string;
-  todoItems: { content: string; done: boolean }[];
+  todoItems: TodoItem[];
 };
 
 export const todoRepository = {
@@ -12,10 +14,20 @@ export const todoRepository = {
     return httpClient.get<Todo>(`/todos?publishedDate=${publishedDate}`);
   },
 
-  async updateDone({ todo }: { todo: Todo }) {
-    return httpClient.patch(`/todos`, todo).then(() => {
-      queryClient.refetchQueries(['todo', todo.publishedDate]);
-    });
+  async updateDone({
+    id,
+    publishedDate,
+    todoItems,
+  }: {
+    id: string;
+    publishedDate: PublishedDate;
+    todoItems: TodoItem[];
+  }) {
+    return httpClient
+      .patch(`/todos/${id}`, { publishedDate, todoItems })
+      .then(() => {
+        queryClient.refetchQueries(['todo', id]);
+      });
   },
 };
 
