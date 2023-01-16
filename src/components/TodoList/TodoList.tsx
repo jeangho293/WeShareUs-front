@@ -14,10 +14,12 @@ import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
 import { useMutation } from '../../libs/react-query';
 import { ProgressBar } from '../ProgressBar';
+import { PublishedDate } from '../../type';
+import { today } from '../../libs/dayjs';
 
-function TodoList(props: { todo: Todo }) {
+function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
   // 1. destructure props
-  const { todo } = props;
+  const { todo, publishedDate } = props;
 
   // 2. lib hooks
   // 3. state hooks
@@ -127,49 +129,51 @@ function TodoList(props: { todo: Todo }) {
           </ListItem>
         );
       })}
-      <ListItem
-        sx={{
-          backgroundColor: '#ede7f6',
-          transition: 'all 0.5s',
-          padding: 0,
-          margin: '16px auto',
-          width: '80%',
-          borderRadius: '16px',
-          '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
-        }}
-      >
-        <TextField
-          value={content}
-          fullWidth
-          placeholder="새로운 항목을 추가해주세요."
-          onChange={(e) => {
-            setContent(e.target.value);
-          }}
-          variant="standard"
-          InputProps={{
-            disableUnderline: true,
-          }}
-          sx={{ paddingLeft: '12px' }}
-        />
-        <Button
-          onClick={() => {
-            if (content) {
-              append({ content, done: false });
-              setContent('');
-              handleUpdate();
-            }
-          }}
+      {publishedDate >= today() && (
+        <ListItem
           sx={{
-            marginLeft: '16px',
-            borderRadius: '0 16px 16px 0',
-            backgroundColor: '#e1bee7',
-            color: 'black',
-            '&:hover': { backgroundColor: '#ce93d8' },
+            backgroundColor: '#ede7f6',
+            transition: 'all 0.5s',
+            padding: 0,
+            margin: '16px auto',
+            width: '80%',
+            borderRadius: '16px',
+            '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
           }}
         >
-          Add
-        </Button>
-      </ListItem>
+          <TextField
+            value={content}
+            fullWidth
+            placeholder="새로운 항목을 추가해주세요."
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+            }}
+            sx={{ paddingLeft: '12px' }}
+          />
+          <Button
+            onClick={() => {
+              if (content) {
+                append({ content, done: false });
+                setContent('');
+                handleUpdate();
+              }
+            }}
+            sx={{
+              marginLeft: '16px',
+              borderRadius: '0 16px 16px 0',
+              backgroundColor: '#e1bee7',
+              color: 'black',
+              '&:hover': { backgroundColor: '#ce93d8' },
+            }}
+          >
+            Add
+          </Button>
+        </ListItem>
+      )}
     </List>
   );
 }

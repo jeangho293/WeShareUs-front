@@ -51,7 +51,11 @@ function TodoListSection() {
           />
         </Divider>
       </Stack>
-      {isValid ? <TodoList todo={todo} /> : <TodoListSkeleton />}
+      {isValid ? (
+        <TodoList todo={todo} publishedDate={publishedDate} />
+      ) : (
+        <TodoListSkeleton />
+      )}
     </>
   );
 }
