@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   Stack,
+  styled,
   TextField,
   Typography,
 } from '@mui/material';
@@ -14,8 +15,18 @@ import { Todo, todoRepository } from '../../repositories/todo.repository';
 import { CheckBox } from '../CheckBox';
 import { useMutation } from '../../libs/react-query';
 import { ProgressBar } from '../ProgressBar';
-import { PublishedDate } from '../../type';
+import type { PublishedDate } from '../../type';
 import { today } from '../../libs/dayjs';
+
+const TodoListItem = styled(ListItem)({
+  backgroundColor: '#ede7f6',
+  transition: 'all 0.5s',
+  padding: 0,
+  margin: '16px auto',
+  width: '80%',
+  borderRadius: '16px',
+  '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
+});
 
 function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
   // 1. destructure props
@@ -27,6 +38,7 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
   const [doneCount, setDoneCount] = useState(
     todo.todoItems.filter((todoItem) => todoItem.done).length,
   );
+  const [isExpired] = useState(publishedDate < today());
 
   // 4. query hooks
   const [updateTodo] = useMutation(todoRepository.updateDone);
@@ -59,6 +71,11 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
       });
     })();
   };
+  const handleAppend = (props: { content: string; done: boolean }) => {
+    append(props);
+    setContent('');
+    handleUpdate();
+  };
 
   return (
     <List sx={{ width: '100%' }}>
@@ -70,20 +87,10 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
 
       {todoItems.map((todoItem, index) => {
         return (
-          <ListItem
-            key={todoItem.id}
-            sx={{
-              backgroundColor: '#ede7f6',
-              transition: 'all 0.5s',
-              padding: '0 12px 0 0',
-              margin: '16px auto',
-              width: '80%',
-              borderRadius: '16px',
-              '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
-            }}
-          >
+          <TodoListItem key={todoItem.id}>
             <Stack direction="row" sx={{ width: '100%', alignItems: 'center' }}>
               <CheckBox
+                disabled={isExpired}
                 checked={todoItem.done}
                 onChange={(state) => {
                   setValue(`todoItems.${index}.done`, state);
@@ -117,34 +124,35 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
                 }}
               />
             </Stack>
-            <IconButton
-              onClick={() => {
-                remove(index);
-                handleUpdate();
-              }}
-              sx={{ color: 'red' }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
+            {!isExpired && (
+              <IconButton
+                onClick={() => {
+                  remove(index);
+                  handleUpdate();
+                }}
+                sx={{ color: 'red', marginRight: '12px' }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            )}
+          </TodoListItem>
         );
       })}
       {publishedDate >= today() && (
-        <ListItem
-          sx={{
-            backgroundColor: '#ede7f6',
-            transition: 'all 0.5s',
-            padding: 0,
-            margin: '16px auto',
-            width: '80%',
-            borderRadius: '16px',
-            '&:hover': { transform: 'scale(1.1)', boxShadow: 1 },
-          }}
-        >
+        <TodoListItem>
           <TextField
             value={content}
             fullWidth
             placeholder="새로운 항목을 추가해주세요."
+            onKeyDown={(event) => {
+              // NOTE: onKeyDown은 enter입력시 함수가 2번 실행되는데 이걸 막기위한 코드
+              if (event.nativeEvent.isComposing) {
+                return;
+              }
+              if (event.key === 'Enter' && content) {
+                handleAppend({ content, done: false });
+              }
+            }}
             onChange={(e) => {
               setContent(e.target.value);
             }}
@@ -157,9 +165,7 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
           <Button
             onClick={() => {
               if (content) {
-                append({ content, done: false });
-                setContent('');
-                handleUpdate();
+                handleAppend({ content, done: false });
               }
             }}
             sx={{
@@ -172,7 +178,7 @@ function TodoList(props: { todo: Todo; publishedDate: PublishedDate }) {
           >
             Add
           </Button>
-        </ListItem>
+        </TodoListItem>
       )}
     </List>
   );

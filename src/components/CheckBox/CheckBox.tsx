@@ -1,14 +1,15 @@
-import { Checkbox as MuiCheckBox } from '@mui/material';
+import { Checkbox as MuiCheckBox, CheckboxProps } from '@mui/material';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { useState } from 'react';
 
-function CheckBox(props: {
-  checked: boolean;
-  onChange: (state: boolean) => void;
-}) {
+function CheckBox(
+  props: {
+    onChange: (state: boolean) => void;
+  } & Omit<CheckboxProps, 'onChange'>,
+) {
   // 1. destructure props
-  const { checked, onChange } = props;
+  const { checked, disabled, onChange } = props;
 
   // 2. lib hooks
   // 3. state hooks
@@ -21,6 +22,7 @@ function CheckBox(props: {
   // 8. handlers
   return (
     <MuiCheckBox
+      disabled={disabled}
       checked={done}
       onChange={(event) => {
         setDone(event.target.checked);

@@ -13,9 +13,11 @@ function App() {
         <Paper
           sx={{
             width: '100%',
-            height: '100vh',
+            minHeight: '100vh',
             backgroundImage: `url(${NightSky})`,
             backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
           }}
         >
           <SnackbarProvider
