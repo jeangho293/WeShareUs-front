@@ -17,6 +17,7 @@ function App() {
             backgroundImage: `url(${NightSky})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
             backgroundAttachment: 'fixed',
           }}
         >
