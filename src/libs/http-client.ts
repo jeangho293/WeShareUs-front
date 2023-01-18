@@ -13,7 +13,7 @@ export const httpClient = (() => {
         config,
       } = err;
 
-      if (data !== 'No todo') {
+      if (data.errorMessage !== 'No todo') {
         return Promise.reject(err);
       }
       await instance.post(config.url);
