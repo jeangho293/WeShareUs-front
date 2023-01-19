@@ -4,5 +4,6 @@ export * from './Layout';
 export * from './LoginForm';
 export * from './Navigation';
 export * from './ProgressBar';
+export * from './PublicLayout';
 export * from './TodoList';
 export * from './TodoListSection';
