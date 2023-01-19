@@ -27,9 +27,7 @@ function App() {
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Navigation />
-            <Layout>
-              <AppRouter />
-            </Layout>
+            <AppRouter />
           </SnackbarProvider>
         </Paper>
       </ThemeProvider>

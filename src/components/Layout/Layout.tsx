@@ -1,9 +1,9 @@
 import { Stack } from '@mui/material';
 import { ReactNode } from 'react';
 
-function Layout(props: { children: ReactNode }) {
+function Layout(props: { children: ReactNode; maxWidth?: string }) {
   // 1. destructure props
-  const { children } = props;
+  const { children, maxWidth = '50%' } = props;
 
   // 2. lib hooks
   // 3. state hooks
@@ -15,7 +15,7 @@ function Layout(props: { children: ReactNode }) {
   return (
     <Stack
       sx={{
-        maxWidth: '50%',
+        maxWidth,
         margin: '0 auto',
         borderRadius: '12px',
         padding: '128px 0',

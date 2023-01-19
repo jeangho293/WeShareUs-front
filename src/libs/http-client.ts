@@ -14,7 +14,7 @@ export const httpClient = (() => {
       } = err;
 
       if (data.errorMessage !== 'No todo') {
-        return Promise.reject(err);
+        return Promise.reject(data.errorMessage);
       }
       await instance.post(config.url);
       return instance(config);
@@ -22,6 +22,11 @@ export const httpClient = (() => {
   );
 
   return {
+    async post<T>(url: string, data?: any, config?: AxiosRequestConfig) {
+      const response = await instance.post(url, data, config);
+      return response.data.data as T;
+    },
+
     async get<T>(url: string, config?: AxiosRequestConfig) {
       const response = await instance.get(url, config);
       return response.data.data as T;

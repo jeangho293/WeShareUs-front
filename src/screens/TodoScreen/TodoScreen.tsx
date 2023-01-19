@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { TodoListSection } from '../../components';
+import { Layout, TodoListSection } from '../../components';
 
 function TodoScreen() {
   // 1. destructure props
@@ -11,15 +11,9 @@ function TodoScreen() {
   // 7. effect hooks
   // 8. handlers
   return (
-    <Box
-      sx={{
-        borderRadius: '12px',
-        boxShadow: 3,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      }}
-    >
+    <Layout>
       <TodoListSection />
-    </Box>
+    </Layout>
   );
 }
 

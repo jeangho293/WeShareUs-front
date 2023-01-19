@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chip, Divider, Stack, Typography } from '@mui/material';
+import { Box, Chip, Divider, Stack, Typography } from '@mui/material';
 import { useQuery } from '../../libs/react-query';
 import { todoRepository } from '../../repositories/todo.repository';
 import { today } from '../../libs/dayjs';
@@ -28,7 +28,13 @@ function TodoListSection() {
   // 7. effect hooks
   // 8. handlers
   return (
-    <>
+    <Box
+      sx={{
+        borderRadius: '12px',
+        boxShadow: 3,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      }}
+    >
       <Stack
         spacing="16px"
         sx={{ justifyContent: 'center', alignItems: 'center', color: '#FFF' }}
@@ -56,7 +62,7 @@ function TodoListSection() {
       ) : (
         <TodoListSkeleton />
       )}
-    </>
+    </Box>
   );
 }
 
