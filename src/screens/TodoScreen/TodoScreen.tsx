@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { Layout, TodoListSection } from '../../components';
 
 function TodoScreen() {
@@ -13,6 +12,7 @@ function TodoScreen() {
   return (
     <Layout>
       <TodoListSection />
+      자동 빌드 되나요..?
     </Layout>
   );
 }
