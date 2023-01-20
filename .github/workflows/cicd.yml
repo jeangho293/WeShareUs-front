@@ -23,5 +23,5 @@ jobs:
         run: |
           aws s3 cp \
           --recursive \
-          --region ${{ secrets.AWS_REGION }} \
-          build s3: ${{ secrets.S3_BUCKET }}
+          --region ap-northeast-2 \
+          build s3:weshareus
