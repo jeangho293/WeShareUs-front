@@ -11,17 +11,25 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Install dependencies
-        run: yarn
+        run: npm install
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
-      - name: Deploy
+      - name: S3 Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           aws s3 cp \
           --recursive \
           --region ap-northeast-2 \
           build s3://weshareus
+
+      - name: Invalidate CloudFront Cache
+        uses: chetan/invalidate-cloudfront-action@master
+        env:
+          AWS_DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          PATHS: '/index.html'
+        continue-on-error: true
