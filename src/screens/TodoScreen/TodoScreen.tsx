@@ -12,7 +12,6 @@ function TodoScreen() {
   return (
     <Layout>
       <TodoListSection />
-      수정되었는지 확인바람.
     </Layout>
   );
 }
