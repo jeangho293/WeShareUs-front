@@ -12,7 +12,6 @@ function TodoScreen() {
   return (
     <Layout>
       <TodoListSection />
-      자동 빌드 되나요..?
     </Layout>
   );
 }
