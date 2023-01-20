@@ -13,6 +13,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate Environment
+        run : |
+          echo "REACT_APP_HOST_NAME=$REACT_APP_HOST_NAME" >> .env.production
+        env :
+          REACT_APP_HOST_NAME: ${{ secrets.REACT_APP_HOST_NAME }}
       - name: Build
         run: npm run build
 
