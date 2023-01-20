@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
+const isDev = process.env.NODE_ENV !== 'production';
 export const httpClient = (() => {
   const instance = axios.create({
-    baseURL: 'http://localhost:4000',
+    baseURL: isDev ? 'http://localhost:4000' : process.env.REACT_APP_HOST_NAME,
   });
 
   instance.interceptors.response.use(
